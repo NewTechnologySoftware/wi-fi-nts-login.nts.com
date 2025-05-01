@@ -1,2 +1,2 @@
-# wi-fi-nts-login.github.io
+# wi-fi-nts-login.git.cz
 Wi-Fi Local
