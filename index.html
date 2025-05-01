@@ -10,7 +10,7 @@
     <div class="container">
         <h1>Wi-Fi Local</h1>
         <p>
-            Pojďte se připojit k síti Wi-Fi Local. Důležité upozornění: Pokud se připojíte k síti Wi-Fi Local, zapojíte zařízení do vlastní anonymní identity! Anonymní identitu si můžete představit jako Vaši uzamčenou chráněnou složku, do které by neměly proniknou viry ani jiný škodlivý software nebo útočníci. V této "složce" - anonymní identitě - jsou zapojena Vaše zařízení a díky ní bezpečně komunikují s internetem. Pokud by se stalo, že by se do Vaší anonymní identity dostal malware, je pravděpodobné, že infikuje všechny vaše zařízení ve Vaší anonymní identitě (zařízení v jiné anonymní identitě nedokáže infikovat). Proto je důležité, abyste se do svojí anonymní identity vždy připojovali pouze zařízeními, kterým důvěřujete! Nikdy do svojí anonymní identity nepouštějte návštěvy a hosty - nikdy nevíte, zda právě oni nemají v zařízení skrytý malware (a ne, to že mají antivirus neznamená, že nemohou mít malware + v dnešní době se právě většina malwaru snaží infikovat další zařízení v síti) - pro návštěvy a hosty je určena síť Wi-Fi Host, ke které se mohou připojit na <a href="https://nts-software-wi-fi.mystrikingly.com" target="_blank">nts-software-wi-fi.mystrikingly.com</a>! Vaše anonymní identita by měla obsahovat pouze Vaše zařízení, kterým důvěřujete a máte nad nimi svou kontrolu! Pokud vlastníte "noname" zařízení (např. čínské značky z Temu apod.) nebo zařízení, kterým nedůvěřujete a mohou obsahovat sledovací nástroje, raději se jimi připojte na izolovanou síť Wi-Fi Host odkazem výše...
+            Pojďte se připojit k síti Wi-Fi Local. <strong>Důležité upozornění:</strong> Pokud se připojíte k síti Wi-Fi Local, zapojíte zařízení do vlastní anonymní identity! Anonymní identitu si můžete představit jako Vaši uzamčenou chráněnou složku, do které by neměly proniknou viry ani jiný škodlivý software nebo útočníci. V této "složce" - anonymní identitě - jsou zapojena Vaše zařízení a díky ní bezpečně komunikují s internetem. Pokud by se stalo, že by se do Vaší anonymní identity dostal malware, je pravděpodobné, že <strong>infikuje všechny vaše zařízení ve Vaší anonymní identitě</strong> (zařízení v jiné anonymní identitě nedokáže infikovat). Proto je důležité, abyste se <strong>do svojí anonymní identity vždy připojovali pouze zařízeními, kterým důvěřujete!</strong> Nikdy do svojí anonymní identity nepouštějte návštěvy a hosty - nikdy nevíte, zda právě oni nemají v zařízení skrytý malware <strong>(a ne, to že mají antivirus neznamená, že nemohou mít malware + v dnešní době se právě většina malwaru snaží infikovat další zařízení v síti - to by bylo právě Vaše)</strong> - pro návštěvy a hosty <strong>je určena síť Wi-Fi Host</strong>, ke které se mohou připojit na <a href="https://nts-software-wi-fi.mystrikingly.com" target="_blank">nts-software-wi-fi.mystrikingly.com</a>! Vaše anonymní identita by měla obsahovat <strong>pouze Vaše zařízení, kterým důvěřujete a máte nad nimi svou kontrolu!</strong> Pokud vlastníte "noname" zařízení (např. čínské značky z Temu apod.) nebo zařízení, kterým nedůvěřujete a mohou obsahovat sledovací nástroje, <strong>raději se jimi připojte na izolovanou síť Wi-Fi Host odkazem výše</strong>...
         </p>
 
         <h2>Připojte se do svojí anonymní identity a připojte se k Wi-Fi Local</h2>
@@ -34,10 +34,8 @@
             const errorMessage = document.getElementById('error-message');
 
             if (correctIdentities.includes(inputIdentity)) {
-                // Správná identita, přesměrování na další stránku
                 window.location.href = "page2.html";
             } else {
-                // Nesprávná identita, zobrazení chybové zprávy
                 errorMessage.style.display = "block";
             }
         }
