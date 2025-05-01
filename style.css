@@ -52,7 +52,7 @@ label {
 }
 
 input[type="text"] {
-    width: calc(100% - 22px); /* Adjusting for padding and border */
+    width: calc(100% - 22px); 
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -89,11 +89,10 @@ button + button {
 
 .keygen-code {
     font-weight: bold;
-    color: #28a745; /* Green color for emphasis */
+    color: #28a745; 
     font-size: 1.2em;
 }
 
-/* Simple dynamic touch with hover effects */
 button:active {
     background-color: #004085;
     transform: translateY(1px);
