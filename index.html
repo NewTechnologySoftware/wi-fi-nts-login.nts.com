@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Local</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Wi-Fi Local</h1>
+        <p>
+            Pojďte se připojit k síti Wi-Fi Local. Důležité upozornění: Pokud se připojíte k síti Wi-Fi Local, zapojíte zařízení do vlastní anonymní identity! Anonymní identitu si můžete představit jako Vaši uzamčenou chráněnou složku, do které by neměly proniknou viry ani jiný škodlivý software nebo útočníci. V této "složce" - anonymní identitě - jsou zapojena Vaše zařízení a díky ní bezpečně komunikují s internetem. Pokud by se stalo, že by se do Vaší anonymní identity dostal malware, je pravděpodobné, že infikuje všechny vaše zařízení ve Vaší anonymní identitě (zařízení v jiné anonymní identitě nedokáže infikovat). Proto je důležité, abyste se do svojí anonymní identity vždy připojovali pouze zařízeními, kterým důvěřujete! Nikdy do svojí anonymní identity nepouštějte návštěvy a hosty - nikdy nevíte, zda právě oni nemají v zařízení skrytý malware (a ne, to že mají antivirus neznamená, že nemohou mít malware + v dnešní době se právě většina malwaru snaží infikovat další zařízení v síti) - pro návštěvy a hosty je určena síť Wi-Fi Host, ke které se mohou připojit na <a href="https://nts-software-wi-fi.mystrikingly.com" target="_blank">nts-software-wi-fi.mystrikingly.com</a>! Vaše anonymní identita by měla obsahovat pouze Vaše zařízení, kterým důvěřujete a máte nad nimi svou kontrolu! Pokud vlastníte "noname" zařízení (např. čínské značky z Temu apod.) nebo zařízení, kterým nedůvěřujete a mohou obsahovat sledovací nástroje, raději se jimi připojte na izolovanou síť Wi-Fi Host odkazem výše...
+        </p>
+
+        <h2>Připojte se do svojí anonymní identity a připojte se k Wi-Fi Local</h2>
+
+        <div class="form-group">
+            <label for="identity">Zadejte Vaši anonymní identitu</label>
+            <input type="text" id="identity" name="identity">
+        </div>
+
+        <button onclick="checkIdentity()">Další</button>
+
+        <p id="error-message" class="error" style="display: none;">
+            Nesprávná anonymní identita! Tato anonymní identita neexistuje. Požadavek byl odmítnut! Pokud jste zapomněli svou anonymní identitu, obraťte se na správce nebo na nts.podpora@gmail.com.
+        </p>
+    </div>
+
+    <script>
+        function checkIdentity() {
+            const inputIdentity = document.getElementById('identity').value.trim();
+            const correctIdentities = ["54381848487273884839847", "747362774782830477473"];
+            const errorMessage = document.getElementById('error-message');
+
+            if (correctIdentities.includes(inputIdentity)) {
+                // Správná identita, přesměrování na další stránku
+                window.location.href = "page2.html";
+            } else {
+                // Nesprávná identita, zobrazení chybové zprávy
+                errorMessage.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
