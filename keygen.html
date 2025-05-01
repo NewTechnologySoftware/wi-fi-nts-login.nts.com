@@ -5,11 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keygen Ready!</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .copy-button {
+            margin-left: 10px; 
+            padding: 5px 10px;
+            font-size: 0.9em;
+        }
+        .copy-message {
+            color: #28a745; 
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 1.2em; 
+            visibility: hidden; 
+            opacity: 0; 
+            transition: opacity 0.3s ease-in-out; 
+            text-align: center; 
+        }
+        .copy-message.error {
+             color: #dc3545; 
+        }
+        .copy-message.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Keygen Ready!</h1>
-        <p>Použijte keygen: <span class="keygen-code">Lopata15</span></p>
+        <p>
+            Použijte keygen:
+            <span class="keygen-code" id="keygenValue">15TER+11@Poj--h00otkxBzHHxcc</span>
+            <button class="copy-button" onclick="copyKeygen()">Zkopírovat do schránky</button>
+        </p>
+        <p id="copyStatus" class="copy-message"></p>
     </div>
+
+    <script>
+        function copyKeygen() {
+            const keygenText = document.getElementById('keygenValue').innerText;
+            const statusMessage = document.getElementById('copyStatus');
+
+            statusMessage.classList.remove('visible', 'error');
+            statusMessage.innerText = ''; 
+
+            navigator.clipboard.writeText(keygenText).then(function() {
+                statusMessage.innerText = 'Zkopírováno do schránky'; 
+                statusMessage.classList.add('visible'); 
+
+
+                setTimeout(function() {
+                    statusMessage.classList.remove('visible'); 
+                }, 2000); 
+
+            }, function(err) {
+                console.error('Nepodařilo se zkopírovat text: ', err);
+                statusMessage.innerText = 'Chyba při kopírování!'; 
+                statusMessage.classList.add('visible', 'error'); 
+
+                 setTimeout(function() {
+                    statusMessage.classList.remove('visible', 'error');
+                }, 5000);
+            });
+        }
+    </script>
 </body>
 </html>
