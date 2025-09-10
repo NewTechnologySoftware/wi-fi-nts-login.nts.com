@@ -4,26 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keygen Ready!</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        .copy-button {
-            margin-left: 10px; 
-            padding: 5px 10px;
-            font-size: 0.9em;
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
         }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            transition: all 0.5s ease-in-out;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            transition: color 0.5s ease-in-out;
+        }
+
+        .keygen-code {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2em;
+        }
+
+        .copy-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .copy-button:hover {
+            background-color: #218838;
+        }
+
+        .copy-button:active {
+            background-color: #1e7e34;
+            transform: translateY(1px);
+        }
+
         .copy-message {
-            color: #28a745; 
+            color: #28a745;
             font-weight: bold;
             margin-top: 10px;
-            min-height: 1.2em; 
-            visibility: hidden; 
-            opacity: 0; 
-            transition: opacity 0.3s ease-in-out; 
-            text-align: center; 
+            min-height: 1.2em;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            text-align: center;
         }
+
         .copy-message.error {
-            color: #dc3545; 
+            color: #dc3545;
         }
+
         .copy-message.visible {
             visibility: visible;
             opacity: 1;
@@ -57,15 +112,23 @@
 
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        
+        // Zde je upravená cesta k heslu pro wifi local
         const keygenRef = database.ref('wifiData/keygen/WLocalKey');
 
         keygenRef.on('value', snapshot => {
             const keygenValue = snapshot.val();
-            if (keygenValue) {
-                document.getElementById('keygenValue').innerText = keygenValue;
+            const keygenElement = document.getElementById('keygenValue');
+            
+            if (snapshot.exists() && keygenValue) {
+                keygenElement.innerText = keygenValue;
             } else {
-                document.getElementById('keygenValue').innerText = "Chyba při načítání.";
+                keygenElement.innerText = "Chyba: Heslo nebylo nalezeno.";
+                console.error("Heslo pro WLocalKey nebylo nalezeno v databázi.");
             }
+        }, error => {
+            document.getElementById('keygenValue').innerText = "Chyba při načítání.";
+            console.error("Chyba při načítání databáze: ", error.message);
         });
 
         function copyKeygen() {
@@ -73,26 +136,26 @@
             const statusMessage = document.getElementById('copyStatus');
 
             statusMessage.classList.remove('visible', 'error');
-            statusMessage.innerText = ''; 
+            statusMessage.innerText = '';
 
-            if (keygenText === 'Načítám...' || keygenText === 'Chyba při načítání.') {
-                statusMessage.innerText = 'Nelze zkopírovat, keygen se načítá.';
+            if (keygenText.includes('Chyba') || keygenText.includes('Načítám...')) {
+                statusMessage.innerText = 'Nelze zkopírovat, keygen se načítá nebo je chybový.';
                 statusMessage.classList.add('visible', 'error');
                 return;
             }
 
             navigator.clipboard.writeText(keygenText).then(function() {
-                statusMessage.innerText = 'Zkopírováno do schránky'; 
-                statusMessage.classList.add('visible'); 
+                statusMessage.innerText = 'Zkopírováno do schránky';
+                statusMessage.classList.add('visible');
 
                 setTimeout(function() {
-                    statusMessage.classList.remove('visible'); 
-                }, 2000); 
+                    statusMessage.classList.remove('visible');
+                }, 2000);
 
             }, function(err) {
                 console.error('Nepodařilo se zkopírovat text: ', err);
-                statusMessage.innerText = 'Chyba při kopírování!'; 
-                statusMessage.classList.add('visible', 'error'); 
+                statusMessage.innerText = 'Chyba při kopírování!';
+                statusMessage.classList.add('visible', 'error');
 
                 setTimeout(function() {
                     statusMessage.classList.remove('visible', 'error');
