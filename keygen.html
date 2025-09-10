@@ -22,7 +22,7 @@
             text-align: center; 
         }
         .copy-message.error {
-             color: #dc3545; 
+            color: #dc3545; 
         }
         .copy-message.visible {
             visibility: visible;
@@ -34,14 +34,40 @@
     <div class="container">
         <h1>Keygen Ready!</h1>
         <p>
-            Použijte keygen (háhodně vygenerované heslo):
-            <span class="keygen-code" id="keygenValue">15TER+11@Poj--h00otkxBzHHxcc</span>
+            Použijte keygen:
+            <span class="keygen-code" id="keygenValue">Načítám...</span>
             <button class="copy-button" onclick="copyKeygen()">Zkopírovat do schránky</button>
         </p>
         <p id="copyStatus" class="copy-message"></p>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script>
+        // Vaše Firebase konfigurace
+        const firebaseConfig = {
+            apiKey: "AIzaSyBw5lQsztOMvg8R1_DP8dFQ2_Kvoowywu8",
+            authDomain: "ntswifi.firebaseapp.com",
+            projectId: "ntswifi",
+            storageBucket: "ntswifi.firebasestorage.app",
+            messagingSenderId: "756107277295",
+            appId: "1:756107277295:web:f3147d77da66193e4f7c1a"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const keygenRef = database.ref('wifiData/keygen/WLocalKey');
+
+        keygenRef.on('value', snapshot => {
+            const keygenValue = snapshot.val();
+            if (keygenValue) {
+                document.getElementById('keygenValue').innerText = keygenValue;
+            } else {
+                document.getElementById('keygenValue').innerText = "Chyba při načítání.";
+            }
+        });
+
         function copyKeygen() {
             const keygenText = document.getElementById('keygenValue').innerText;
             const statusMessage = document.getElementById('copyStatus');
@@ -49,10 +75,15 @@
             statusMessage.classList.remove('visible', 'error');
             statusMessage.innerText = ''; 
 
+            if (keygenText === 'Načítám...' || keygenText === 'Chyba při načítání.') {
+                statusMessage.innerText = 'Nelze zkopírovat, keygen se načítá.';
+                statusMessage.classList.add('visible', 'error');
+                return;
+            }
+
             navigator.clipboard.writeText(keygenText).then(function() {
                 statusMessage.innerText = 'Zkopírováno do schránky'; 
                 statusMessage.classList.add('visible'); 
-
 
                 setTimeout(function() {
                     statusMessage.classList.remove('visible'); 
@@ -63,7 +94,7 @@
                 statusMessage.innerText = 'Chyba při kopírování!'; 
                 statusMessage.classList.add('visible', 'error'); 
 
-                 setTimeout(function() {
+                setTimeout(function() {
                     statusMessage.classList.remove('visible', 'error');
                 }, 5000);
             });
