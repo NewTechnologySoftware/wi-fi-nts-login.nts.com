@@ -12,31 +12,120 @@
         <p>
             Pojďte se připojit k síti Wi-Fi Local. <strong>Důležité upozornění:</strong> Pokud se připojíte k síti Wi-Fi Local, zapojíte zařízení do vlastní anonymní identity! Anonymní identitu si můžete představit jako Vaši uzamčenou chráněnou složku, do které by neměly proniknou viry ani jiný škodlivý software nebo útočníci. V této "složce" - anonymní identitě - jsou zapojena Vaše zařízení a díky ní bezpečně komunikují s internetem. Pokud by se stalo, že by se do Vaší anonymní identity dostal malware, je pravděpodobné, že <strong>infikuje všechny vaše zařízení ve Vaší anonymní identitě</strong> (zařízení v jiné anonymní identitě nedokáže infikovat). Proto je důležité, abyste se <strong>do svojí anonymní identity vždy připojovali pouze zařízeními, kterým důvěřujete!</strong> Nikdy do svojí anonymní identity nepouštějte návštěvy a hosty - nikdy nevíte, zda právě oni nemají v zařízení skrytý malware <strong>(a ne, to že mají antivirus neznamená, že nemohou mít malware + v dnešní době se právě většina malwaru snaží infikovat další zařízení v síti - to by bylo právě Vaše)</strong> - pro návštěvy a hosty <strong>je určena síť Wi-Fi Host</strong>, ke které se mohou připojit na <a href="https://nts-software-wi-fi.mystrikingly.com" target="_blank">nts-software-wi-fi.mystrikingly.com</a>! Vaše anonymní identita by měla obsahovat <strong>pouze Vaše zařízení, kterým důvěřujete a máte nad nimi svou kontrolu!</strong> Pokud vlastníte "noname" zařízení (např. čínské značky z Temu apod.) nebo zařízení, kterým nedůvěřujete a mohou obsahovat sledovací nástroje, <strong>raději se jimi připojte na izolovanou síť Wi-Fi Host odkazem výše</strong>...
         </p>
-
         <h2>Připojte se do svojí anonymní identity a připojte se k Wi-Fi Local</h2>
-
         <div class="form-group">
             <label for="identity">Zadejte Vaši anonymní identitu</label>
             <input type="text" id="identity" name="identity">
         </div>
-
         <button onclick="checkIdentity()">Další</button>
-
-        <p id="error-message" class="error" style="display: none;">
-            Nesprávná anonymní identita! Tato anonymní identita neexistuje. Požadavek byl odmítnut! Pokud jste zapomněli svou anonymní identitu, obraťte se na správce nebo na nts.podpora@gmail.com.
-        </p>
+        <div id="overlay" class="overlay">
+            <div id="popup" class="popup">
+                <div id="popup-content"></div>
+            </div>
+        </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script>
+        // Vaše Firebase konfigurace
+        const firebaseConfig = {
+            apiKey: "AIzaSyBw5lQsztOMvg8R1_DP8dFQ2_Kvoowywu8",
+            authDomain: "ntswifi.firebaseapp.com",
+            projectId: "ntswifi",
+            storageBucket: "ntswifi.firebasestorage.app",
+            messagingSenderId: "756107277295",
+            appId: "1:756107277295:web:f3147d77da66193e4f7c1a"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const identitiesRef = database.ref('wifiData/identities');
+        
+        let currentIdentity = "";
+
+        // Funkce pro zobrazení překryvného prvku
+        function showPopup(content) {
+            const popupContent = document.getElementById('popup-content');
+            popupContent.innerHTML = content;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        // Funkce pro zavření překryvného prvku
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Funkce pro ověření identity
         function checkIdentity() {
             const inputIdentity = document.getElementById('identity').value.trim();
-            const correctIdentities = ["54381848487273884839847", "74736277478283047277473"];
-            const errorMessage = document.getElementById('error-message');
+            if (inputIdentity === "") {
+                showPopup(`
+                    <p class="error-text">Zadejte prosím anonymní identitu.</p>
+                    <button onclick="closePopup()">OK, zkusit znovu</button>
+                `);
+                return;
+            }
+            
+            identitiesRef.child(inputIdentity).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    currentIdentity = inputIdentity;
+                    showPasswordPopup();
+                } else {
+                    showPopup(`
+                        <p class="error-text">Neexistuje žádná taková anonymní identita. Zkontrolujte, že jste ji zadali správně nebo se obraťte na správce internetu NTS. Hotline: <a href="tel:+420739124428">+420 739 124 428</a>, e-mail: <a href="mailto:nts.podpora@gmail.com">nts.podpora@gmail.com</a></p>
+                        <button onclick="closePopup()">OK, zkusit znovu</button>
+                    `);
+                }
+            });
+        }
 
-            if (correctIdentities.includes(inputIdentity)) {
+        // Funkce pro zobrazení pop-up okna s heslem
+        function showPasswordPopup() {
+            showPopup(`
+                <h2>Zadat heslo k anonymní identitě</h2>
+                <p>Nyní ověříme, že se přihlašujete opravdu Vy. Zadejte prosím své heslo k anonymní identitě:</p>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Zadejte heslo" onkeydown="handleEnter(event)">
+                </div>
+                <button onclick="checkPassword()">Potvrdit</button>
+            `);
+        }
+
+        // Funkce pro ověření hesla
+        function checkPassword() {
+            const inputPassword = document.getElementById('password').value.trim();
+            identitiesRef.child(currentIdentity).once('value', snapshot => {
+                const userData = snapshot.val();
+                if (userData && userData.password === inputPassword) {
+                    showVerificationPopup(userData.notes);
+                } else {
+                    showPopup(`
+                        <p class="error-text">Nesprávné heslo pro anonymní identitu. Zkuste to znovu. V případě problémů nebo požadavku na obnovu hesla se obraťte na správce sítě NTS. Hotline: <a href="tel:+420739124428">+420 739 124 428</a>, e-mail: <a href="mailto:nts.podpora@gmail.com">nts.podpora@gmail.com</a></p>
+                        <button onclick="showPasswordPopup()">Zkusit znovu</button>
+                    `);
+                }
+            });
+        }
+
+        // Funkce pro zobrazení nového pop-up okna s načítáním
+        function showVerificationPopup(userName) {
+            showPopup(`
+                <h2>Vítejte, ${userName}</h2>
+                <p>Moment prosím, ověřujeme, že se přihlašujete skutečně Vy, ${userName}. Zabere to jen chvilku...</p>
+                <div class="loader"></div>
+            `);
+
+            // Časovač na 18 sekund
+            setTimeout(() => {
                 window.location.href = "page2.html";
-            } else {
-                errorMessage.style.display = "block";
+            }, 18000);
+        }
+        
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
             }
         }
     </script>
